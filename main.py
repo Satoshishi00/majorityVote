@@ -117,17 +117,36 @@ def sort_candidates_by(mentions):
         for candidate in unsorted
     ]
 
+############### FORMAT RESULTS #####################
+
+
+def print_results(results):
+    for i, result in enumerate(results):
+        name = CANDIDATES[result["name"]]
+        mention = MENTIONS[result["mention"]]
+        score = result["score"] * 100. / VOTES
+        if i == 0:
+            # Round 2 numbers after the decimal point
+            print("Gagnant: {} avec {:.2f}% de mentions {}".format(
+                name, score, mention
+            ))
+            continue
+        else:
+            print("- {} avec {:.2f}% de mentions {}".format(
+                name, score, mention
+            ))
+
+
 ##################################################
 #################### MAIN FUNCTION ###############
 ##################################################
-
 
 def main():
     votes = create_votes()
     results = results_hash(votes)
     majoritary_mentions = majoritary_mentions_hash(results)
     sorted_candidates = sort_candidates_by(majoritary_mentions)
-    print((sorted_candidates))
+    print_results(sorted_candidates)
 
 
 if __name__ == '__main__':
