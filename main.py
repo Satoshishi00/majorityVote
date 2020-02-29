@@ -64,15 +64,33 @@ def results_hash(votes):
             candidates_results[candidate][mention] += 1
     return candidates_results
 
+############### CALCULATE MEDIAN ##################
+
+
+def majoritary_mentions_hash(candidates_results):
+    result = {}
+    for candidate, candidate_result in candidates_results.items():
+        cumulated_votes = 0
+        for mention, vote_count in enumerate(candidate_result):
+            cumulated_votes += vote_count
+            if MEDIAN < cumulated_votes:
+                result[candidate] = {
+                    "mention": mention,
+                    "score": cumulated_votes
+                }
+                break
+    return result
 
 ##################################################
 #################### MAIN FUNCTION ###############
 ##################################################
 
+
 def main():
     votes = create_votes()
     results = results_hash(votes)
-    print(results)
+    majoritary_mentions = majoritary_mentions_hash(results)
+    print(majoritary_mentions)
 
 
 if __name__ == '__main__':
