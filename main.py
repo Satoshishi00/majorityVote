@@ -81,6 +81,42 @@ def majoritary_mentions_hash(candidates_results):
                 break
     return result
 
+# ############### SORT CANDIDATES #####################
+
+
+def sort_candidates_by(mentions):
+    # bubble sort here we go!
+    unsorted = [(key, (mention["mention"], mention["score"]))
+                for key, mention in mentions.items()]
+    swapped = True
+    while swapped:
+        swapped = False
+        for j in range(0, len(unsorted) - 1):
+            # but we need REVERSE bubble sort ;-)
+            # (note that here we compare tuples, which is pretty neat)
+            if unsorted[j+1][1] < unsorted[j][1]:
+                unsorted[j+1], unsorted[j] = unsorted[j], unsorted[j+1]
+                swapped = True
+
+    # Begin another loop in case of equalty
+    swapped = True
+    while swapped:
+        swapped = False
+        for i in range(0, len(unsorted) - 1):
+            if unsorted[i][1][0] == unsorted[i+1][1][0]:
+                if unsorted[i+1][1][1] > unsorted[i][1][1]:
+                    unsorted[i+1], unsorted[i] = unsorted[i], unsorted[i+1]
+                    swapped = True
+
+    return [
+        {
+            "name": candidate[0],
+            "mention": candidate[1][0],
+            "score": candidate[1][1],
+        }
+        for candidate in unsorted
+    ]
+
 ##################################################
 #################### MAIN FUNCTION ###############
 ##################################################
@@ -90,7 +126,8 @@ def main():
     votes = create_votes()
     results = results_hash(votes)
     majoritary_mentions = majoritary_mentions_hash(results)
-    print(majoritary_mentions)
+    sorted_candidates = sort_candidates_by(majoritary_mentions)
+    print((sorted_candidates))
 
 
 if __name__ == '__main__':
